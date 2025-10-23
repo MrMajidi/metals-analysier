@@ -1,0 +1,5 @@
+{
+  "name": "Precious Metals Analysis",
+  "description": "An analytical application for precious metals that fetches and processes data from the Iranian Mercantile Exchange (IME) API, displaying aggregated results in tables and charts.",
+  "requestFramePermissions": []
+}
