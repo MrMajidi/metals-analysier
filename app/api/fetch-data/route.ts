@@ -103,15 +103,12 @@ export async function POST(request: NextRequest) {
         originalPayload
       )}'`
     );
-    const response = await fetch("https://prx.darkube.app/proxy", {
+    const response = await fetch(ORIGIN_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        data: originalPayload,
-        url: ORIGIN_URL,
-      }),
+      body: JSON.stringify(originalPayload),
     });
 
     if (!response.ok) {
