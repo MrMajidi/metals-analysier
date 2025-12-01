@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
     const ORIGIN_URL =
       "https://www.ime.co.ir/subsystems/ime/services/home/imedata.asmx/GetAmareMoamelatList";
 
+    const PROXY_URL = "https://prx.darkube.app/proxy";
     const originalPayload = {
       Language: 8,
       fari: false,
@@ -34,12 +35,15 @@ export async function POST(request: NextRequest) {
         originalPayload
       )}'`
     );
-    const response = await fetch(ORIGIN_URL, {
+    const response = await fetch(PROXY_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(originalPayload),
+      body: JSON.stringify({
+        url: ORIGIN_URL,
+        data: originalPayload
+      }),
     });
 
     if (!response.ok) {
