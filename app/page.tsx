@@ -5,6 +5,7 @@ import type { RawDataItem, AggregatedData } from '../types';
 import DataTable from './components/DataTable';
 import Spinner from './components/Spinner';
 import MultiSelect from './components/MultiSelect';
+import PairComparison from './components/PairComparison';
 import { getWeeksOfYear, getCurrentJalaliYear, WeekOption } from './utils/dateUtils';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import * as XLSX from 'xlsx';
@@ -285,6 +286,11 @@ export default function Home() {
             )}
             {aggregatedData && (
               <>
+                {/* Pair Comparison Section */}
+                <div className="mb-8">
+                  <PairComparison data={aggregatedData} />
+                </div>
+
                 <div>
                   <div className="flex justify-between items-center mb-4 gap-4">
                     <h2 className="text-2xl font-semibold text-slate-300">جدول خلاصه معاملات</h2>
