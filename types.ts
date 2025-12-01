@@ -42,4 +42,6 @@ export interface AggregatedData {
   totalSupply: number;
   totalValue: number;
   averagePrice: number;
+  volumeToSupplyRatio: number;
+  priceToBasePriceRatio: number;
 }

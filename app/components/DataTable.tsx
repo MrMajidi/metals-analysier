@@ -12,6 +12,8 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     "حجم عرضه (تن)",
     "ارزش معامله (ریال)",
     "میانگین قیمت (ریال/تن)",
+    "نسبت حجم معاملات به حجم عرضه (%)",
+    "نسبت فی معامله به فی پایه (%)",
   ];
 
   return (
@@ -36,6 +38,8 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
               <td className="px-6 py-4">{item.totalSupply.toLocaleString('fa-IR')}</td>
               <td className="px-6 py-4">{item.totalValue.toLocaleString('fa-IR')}</td>
               <td className="px-6 py-4">{Math.round(item.averagePrice).toLocaleString('fa-IR')}</td>
+              <td className="px-6 py-4">{item.volumeToSupplyRatio.toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</td>
+              <td className="px-6 py-4">{item.priceToBasePriceRatio.toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</td>
             </tr>
           ))}
         </tbody>
