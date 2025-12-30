@@ -62,9 +62,29 @@ export default function MultiSelect({
 
             {isOpen && (
                 <div className="absolute z-10 w-full mt-1 bg-slate-800 border border-slate-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    <div className="p-2 sticky top-0 bg-slate-800 border-b border-slate-700 z-10">
+                        <input
+                            type="text"
+                            placeholder="جستجو..."
+                            className="w-full bg-slate-700 text-slate-200 text-sm rounded border border-slate-600 p-2 focus:ring-sky-500 focus:border-sky-500"
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => {
+                                const searchTerm = e.target.value.toLowerCase();
+                                const items = document.querySelectorAll(`[data-option-value]`);
+                                items.forEach((item) => {
+                                    const value = item.getAttribute('data-option-value')?.toLowerCase() || '';
+                                    if (value.includes(searchTerm)) {
+                                        (item as HTMLElement).style.display = 'block';
+                                    } else {
+                                        (item as HTMLElement).style.display = 'none';
+                                    }
+                                });
+                            }}
+                        />
+                    </div>
                     <ul className="p-2 space-y-1">
                         {options.map((option) => (
-                            <li key={option}>
+                            <li key={option} data-option-value={option}>
                                 <label className="flex items-center p-2 rounded hover:bg-slate-700 cursor-pointer">
                                     <input
                                         type="checkbox"
