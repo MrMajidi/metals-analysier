@@ -7,7 +7,6 @@ import Spinner from './components/Spinner';
 import MultiSelect from './components/MultiSelect';
 import PairComparison from './components/PairComparison';
 import { getWeeksOfYear, getCurrentJalaliYear, WeekOption } from './utils/dateUtils';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import * as XLSX from 'xlsx';
 
 export default function Home() {
@@ -268,20 +267,23 @@ export default function Home() {
           <div className="bg-slate-800 p-6 rounded-lg shadow-xl mb-8">
             <div className="flex flex-col gap-4">
               {/* Week Selection */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                <div className="md:col-span-3">
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+                <div className="md:col-span-2">
                   <label htmlFor="weekSelect" className="block mb-2 text-sm font-medium text-slate-400">انتخاب هفته</label>
                   <select
                     id="weekSelect"
                     value={selectedWeek}
                     onChange={(e) => {
-                      setSelectedWeek(e.target.value);
-                      // Clear manual dates when week is selected
-                      setManualFromDate('');
-                      setManualToDate('');
+                      const newWeek = e.target.value;
+                      setSelectedWeek(newWeek);
+                      const weekObj = weeks.find(w => w.label === newWeek);
+                      if (weekObj) {
+                        setManualFromDate(weekObj.fromDate);
+                        setManualToDate(weekObj.toDate);
+                      }
                     }}
-                    disabled={isManualDateSet}
-                    className="bg-slate-700 border border-slate-600 text-slate-200 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 disabled:opacity-50"
+                    disabled={false}
+                    className="bg-slate-700 border border-slate-600 text-slate-200 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
                   >
                     {weeks.map((week) => (
                       <option key={week.label} value={week.label}>
@@ -289,6 +291,30 @@ export default function Home() {
                       </option>
                     ))}
                   </select>
+                </div>
+                {/* Manual Date Selection */}
+                <div className="md:col-span-3">
+                  <div className="text-xs text-slate-500 mb-2">یا انتخاب بازه زمانی دستی (تایپ کنید: 1402/01/01)</div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="از تاریخ (1403/xx/xx)"
+                        value={manualFromDate}
+                        onChange={(e) => setManualFromDate(e.target.value)}
+                        className="bg-slate-700 border border-slate-600 text-slate-200 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="تا تاریخ (1403/xx/xx)"
+                        value={manualToDate}
+                        onChange={(e) => setManualToDate(e.target.value)}
+                        className="bg-slate-700 border border-slate-600 text-slate-200 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="md:col-span-1">
                   <button
@@ -298,31 +324,6 @@ export default function Home() {
                   >
                     {loading ? 'در حال دریافت...' : 'دریافت داده‌ها'}
                   </button>
-                </div>
-              </div>
-
-              {/* Manual Date Selection */}
-              <div className="pt-4 border-t border-slate-700/50">
-                <div className="text-xs text-slate-500 mb-2">یا انتخاب بازه زمانی دستی (تایپ کنید: 1402/01/01)</div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="از تاریخ (1403/xx/xx)"
-                      value={manualFromDate}
-                      onChange={(e) => setManualFromDate(e.target.value)}
-                      className="bg-slate-700 border border-slate-600 text-slate-200 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="تا تاریخ (1403/xx/xx)"
-                      value={manualToDate}
-                      onChange={(e) => setManualToDate(e.target.value)}
-                      className="bg-slate-700 border border-slate-600 text-slate-200 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
