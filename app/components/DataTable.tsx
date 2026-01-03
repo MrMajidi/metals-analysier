@@ -29,7 +29,8 @@ const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [], currency
     "ارزش معامله (ریال)",
     "میانگین قیمت (ریال/تن)",
     "قیمت جهانی (USD/mt)",
-    "قیمت برآورد",
+    "کف برآورد",
+    "سقف برآورد",
     "قیمت دلاری کالا",
     "نسبت حجم معاملات به حجم عرضه (%)",
     "نسبت فی معامله به فی پایه (%)",
@@ -82,19 +83,19 @@ const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [], currency
 
     if (azadGroups.includes(groupName)) {
       if (!azad) return null;
-      return globalPrice * azad;
+      return globalPrice * azad / 1000;
     }
 
     if (blendedGroups4060.includes(groupName)) {
       if (!talar1 || !talar2) return null;
       const blendedRate = (talar1 * 0.4) + (talar2 * 0.6);
-      return globalPrice * blendedRate;
+      return globalPrice * blendedRate / 1000;
     }
 
     if (blendedGroups2080.includes(groupName)) {
       if (!talar1 || !talar2) return null;
       const blendedRate = (talar1 * 0.2) + (talar2 * 0.8);
-      return globalPrice * blendedRate;
+      return globalPrice * blendedRate / 1000;
     }
 
     return null;
@@ -130,6 +131,15 @@ const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [], currency
                 <td className="px-6 py-4">
                   {globalPrice !== null ? (
                     <span className="text-emerald-400">{globalPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                  ) : (
+                    <span className="text-slate-500">—</span>
+                  )}
+                </td>
+                <td className="px-6 py-4">
+                  {estimatedPrice !== null ? (
+                    <span className="text-pink-400 font-medium">
+                      {Math.round(estimatedPrice * 0.95).toLocaleString('fa-IR')}
+                    </span>
                   ) : (
                     <span className="text-slate-500">—</span>
                   )}
