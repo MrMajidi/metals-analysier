@@ -7,6 +7,7 @@ import Spinner from './components/Spinner';
 import MultiSelect from './components/MultiSelect';
 import PairComparison from './components/PairComparison';
 import CurrencyRates from './components/CurrencyRates';
+import GlobalPrices from './components/GlobalPrices';
 import { getWeeksOfYear, getCurrentJalaliYear, WeekOption } from './utils/dateUtils';
 import * as XLSX from 'xlsx';
 
@@ -47,6 +48,32 @@ export default function Home() {
   // Producers will now be derived dynamically
   const [allProducers, setAllProducers] = useState<string[]>([]);
   const [availablePackets, setAvailablePackets] = useState<string[]>([]); // This will now hold groupNames
+
+  // Global prices state
+  interface GlobalPrice {
+    id: number;
+    slug: string;
+    globalName: string;
+    localLabel: string;
+    price: number | null;
+  }
+  const [globalPrices, setGlobalPrices] = useState<GlobalPrice[]>([]);
+
+  // Fetch global prices on mount
+  useEffect(() => {
+    const fetchGlobalPrices = async () => {
+      try {
+        const response = await fetch('/api/global-prices');
+        const data = await response.json();
+        if (data.data) {
+          setGlobalPrices(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching global prices:', err);
+      }
+    };
+    fetchGlobalPrices();
+  }, []);
 
   const getCommodityGroup = useCallback((goodsName: string): string => {
     const keywords = ["ورق گرم", "ورق سرد", "تیرآهن بال پهن", "ورق گالوانیزه", "میلگرد", "تختال", "تیرآهن", "شمش", "کاتد"];
@@ -270,6 +297,9 @@ export default function Home() {
         {/* Currency Rates Section */}
         <CurrencyRates />
 
+        {/* Global Prices Section */}
+        <GlobalPrices />
+
         <main>
           <div className="bg-slate-800 p-6 rounded-lg shadow-xl mb-8">
             <div className="flex flex-col gap-4">
@@ -404,6 +434,7 @@ export default function Home() {
                     data={aggregatedData.filter(item =>
                       searchTerm === '' || item.groupName.toLowerCase().includes(searchTerm.toLowerCase())
                     )}
+                    globalPrices={globalPrices}
                   />
                 </div>
 

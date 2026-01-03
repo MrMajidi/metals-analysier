@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mendable/firecrawl-js": "^4.10.0",
+    "@neondatabase/serverless": "^1.0.2",
+    "drizzle-orm": "^0.45.1",
     "jalaali-js": "^1.2.8",
     "next": "15.1.11",
     "react": "^19.2.0",
@@ -23,6 +26,7 @@
     "@types/react-dom": "^19.0.0",
     "@types/xlsx": "^0.0.36",
     "autoprefixer": "^10.4.20",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "postcss": "^8.4.49",
