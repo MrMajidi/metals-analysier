@@ -9,12 +9,19 @@ interface GlobalPrice {
   price: number | null;
 }
 
+interface CurrencyRates {
+  talar1: number | null; // دلار تالار اول
+  talar2: number | null; // دلار تالار دوم
+  azad: number | null;   // دلار بازار آزاد
+}
+
 interface DataTableProps {
   data: AggregatedData[];
   globalPrices?: GlobalPrice[];
+  currencyRates?: CurrencyRates;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [] }) => {
+const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [], currencyRates }) => {
   const tableHeaders = [
     "گروه کالا",
     "حجم قرارداد (تن)",
@@ -22,6 +29,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [] }) => {
     "ارزش معامله (ریال)",
     "میانگین قیمت (ریال/تن)",
     "قیمت جهانی (USD/mt)",
+    "قیمت برآورد",
     "قیمت دلاری کالا",
     "نسبت حجم معاملات به حجم عرضه (%)",
     "نسبت فی معامله به فی پایه (%)",
@@ -40,6 +48,41 @@ const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [] }) => {
     return (averagePrice / globalPrice) * 1000;
   };
 
+  // Calculate estimated price (قیمت برآورد) based on group-specific formulas
+  const calculateEstimatedPrice = (groupName: string, globalPrice: number | null): number | null => {
+    if (!globalPrice || !currencyRates) return null;
+
+    const { talar1, talar2, azad } = currencyRates;
+
+    // Groups using free market dollar (دلار آزاد)
+    const azadGroups = ["ورق گرم", "ورق سرد", "ورق گالوانیزه"];
+
+    // Groups using 40% talar1 + 60% talar2
+    const blendedGroups4060 = ["شمش", "تختال"];
+
+    // Groups using 20% talar1 + 80% talar2
+    const blendedGroups2080 = ["میلگرد", "تیرآهن", "نبشی", "ناودانی"];
+
+    if (azadGroups.includes(groupName)) {
+      if (!azad) return null;
+      return globalPrice * azad;
+    }
+
+    if (blendedGroups4060.includes(groupName)) {
+      if (!talar1 || !talar2) return null;
+      const blendedRate = (talar1 * 0.4) + (talar2 * 0.6);
+      return globalPrice * blendedRate;
+    }
+
+    if (blendedGroups2080.includes(groupName)) {
+      if (!talar1 || !talar2) return null;
+      const blendedRate = (talar1 * 0.2) + (talar2 * 0.8);
+      return globalPrice * blendedRate;
+    }
+
+    return null;
+  };
+
   return (
     <div className="overflow-x-auto bg-slate-800 rounded-lg shadow-lg">
       <table className="min-w-full text-right text-sm">
@@ -56,6 +99,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [] }) => {
           {data.map((item) => {
             const globalPrice = globalPriceMap.get(item.groupName) ?? null;
             const dollarPrice = calculateDollarPrice(item.averagePrice, globalPrice);
+            const estimatedPrice = calculateEstimatedPrice(item.groupName, globalPrice);
 
             return (
               <tr key={item.groupName} className="hover:bg-slate-700/30 transition-colors duration-200">
@@ -69,6 +113,15 @@ const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [] }) => {
                 <td className="px-6 py-4">
                   {globalPrice !== null ? (
                     <span className="text-emerald-400">{globalPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                  ) : (
+                    <span className="text-slate-500">—</span>
+                  )}
+                </td>
+                <td className="px-6 py-4">
+                  {estimatedPrice !== null ? (
+                    <span className="text-purple-400 font-medium">
+                      {Math.round(estimatedPrice).toLocaleString('fa-IR')}
+                    </span>
                   ) : (
                     <span className="text-slate-500">—</span>
                   )}

@@ -75,6 +75,59 @@ export default function Home() {
     fetchGlobalPrices();
   }, []);
 
+  // Currency rates state
+  interface CurrencyRatesState {
+    talar1: number | null;
+    talar2: number | null;
+    azad: number | null;
+  }
+  const [currencyRates, setCurrencyRates] = useState<CurrencyRatesState>({
+    talar1: null,
+    talar2: null,
+    azad: null,
+  });
+
+  // Fetch currency rates on mount
+  useEffect(() => {
+    const fetchCurrencyRates = async () => {
+      try {
+        // Fetch تالار اول (market 2)
+        const res1 = await fetch('https://api.ice.ir/api/v1/markets/2/currencies/history/latest/?lang=fa');
+        if (res1.ok) {
+          const data1 = await res1.json();
+          const usd1 = data1.find((item: any) => item.slug === 'USD');
+          if (usd1) {
+            setCurrencyRates(prev => ({ ...prev, talar1: parseInt(usd1.sell_price) }));
+          }
+        }
+
+        // Fetch تالار دوم (market 1)
+        const res2 = await fetch('https://api.ice.ir/api/v1/markets/1/currencies/history/latest/?lang=fa');
+        if (res2.ok) {
+          const data2 = await res2.json();
+          const usd2 = data2.find((item: any) => item.slug === 'USD');
+          if (usd2) {
+            setCurrencyRates(prev => ({ ...prev, talar2: parseInt(usd2.sell_price) }));
+          }
+        }
+
+        // Fetch بازار آزاد
+        const res3 = await fetch('https://api.dastyar.io/express/financial-item');
+        if (res3.ok) {
+          const data3 = await res3.json();
+          const usd3 = data3.find((item: any) => item.key === 'usd');
+          if (usd3) {
+            // Dastyar returns price in Toman, multiply by 10 to get Rial
+            setCurrencyRates(prev => ({ ...prev, azad: parseInt(usd3.price) * 10 }));
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching currency rates:', err);
+      }
+    };
+    fetchCurrencyRates();
+  }, []);
+
   const getCommodityGroup = useCallback((goodsName: string): string => {
     const keywords = ["ورق گرم", "ورق سرد", "تیرآهن بال پهن", "ورق گالوانیزه", "میلگرد", "تختال", "تیرآهن", "شمش", "کاتد"];
     for (const keyword of keywords) {
@@ -435,6 +488,7 @@ export default function Home() {
                       searchTerm === '' || item.groupName.toLowerCase().includes(searchTerm.toLowerCase())
                     )}
                     globalPrices={globalPrices}
+                    currencyRates={currencyRates}
                   />
                 </div>
 
