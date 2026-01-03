@@ -6,6 +6,7 @@ import DataTable from './components/DataTable';
 import Spinner from './components/Spinner';
 import MultiSelect from './components/MultiSelect';
 import PairComparison from './components/PairComparison';
+import CurrencyRates from './components/CurrencyRates';
 import { getWeeksOfYear, getCurrentJalaliYear, WeekOption } from './utils/dateUtils';
 import * as XLSX from 'xlsx';
 
@@ -54,6 +55,9 @@ export default function Home() {
         return keyword;
       }
     }
+    if (goodsName.includes("ورق")) {
+      return "سایر";
+    }
     return goodsName.split(/[- ]/)[0] || "سایر";
   }, []);
 
@@ -62,7 +66,7 @@ export default function Home() {
     // Apply filters
     const filteredData = data.filter(item => {
       const itemGroupName = getCommodityGroup(item.GoodsName);
-
+      if (itemGroupName === "سایر") return false;
       if (selectedTasvieh.length > 0 && !selectedTasvieh.includes(item.Tasvieh)) return false;
       // Note: Producer filter check should happen; but available options for it depend on Packet filter
       // However, if we simply filter sequentially, we might have issues.
@@ -262,6 +266,9 @@ export default function Home() {
           <h1 className="text-3xl sm:text-4xl font-bold text-sky-400">تحلیلگر داده‌های بورس کالا</h1>
           <p className="mt-2 text-slate-400">آخرین آمار معاملات فلزات گران‌بها را مشاهده و تحلیل کنید</p>
         </header>
+
+        {/* Currency Rates Section */}
+        <CurrencyRates />
 
         <main>
           <div className="bg-slate-800 p-6 rounded-lg shadow-xl mb-8">

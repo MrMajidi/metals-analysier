@@ -37,7 +37,7 @@ const PairComparison: React.FC<PairComparisonProps> = ({ data }) => {
 
             const priceSource = sourceItem.averagePrice;
             const priceTarget = targetItem.averagePrice;
-            const ratio = priceTarget > 0 ? priceSource / priceTarget : 0;
+            const ratio = priceTarget > 0 ? priceTarget / priceSource : 0;
 
             return {
                 targetName: target,
@@ -78,7 +78,7 @@ const PairComparison: React.FC<PairComparisonProps> = ({ data }) => {
                         ))}
                     </select>
                     {sourceMetal && (
-                        <div className="text-xs text-sky-400 font-mono">
+                        <div className="text-xs text-sky-400">
                             قیمت پایه: {Math.round(data.find(d => d.groupName === sourceMetal)?.averagePrice || 0).toLocaleString('fa-IR')} ریال
                         </div>
                     )}
@@ -107,22 +107,22 @@ const PairComparison: React.FC<PairComparisonProps> = ({ data }) => {
                                 <div key={comp.targetName} className={`p-4 rounded-lg border relative overflow-hidden ${comp.isRatioGreaterThanOne ? 'bg-slate-800/50 border-green-600/50' : 'bg-slate-800/50 border-red-600/50'}`}>
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="text-sm text-slate-400">
-                                            نسبت {sourceMetal} به {comp.targetName}
+                                            نسبت {comp.targetName} به {sourceMetal}
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className={`text-2xl font-bold font-mono ${comp.isRatioGreaterThanOne ? 'text-green-400' : 'text-red-400'}`}>
+                                        <span className={`text-2xl font-bold ${comp.isRatioGreaterThanOne ? 'text-green-400' : 'text-red-400'}`}>
                                             {comp.ratio.toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
                                         </span>
                                         <span className="text-xs text-slate-500">
-                                            ({sourceMetal} = {comp.ratio.toFixed(2)} × {comp.targetName})
+                                            ({comp.targetName} = {comp.ratio.toFixed(2)} × {sourceMetal})
                                         </span>
                                     </div>
 
                                     <div className="text-xs text-slate-400 mt-2 pt-2 border-t border-slate-700/50 flex justify-between">
                                         <span>قیمت {comp.targetName}:</span>
-                                        <span className="font-mono">{Math.round(comp.priceTarget).toLocaleString('fa-IR')}</span>
+                                        <span>{Math.round(comp.priceTarget).toLocaleString('fa-IR')}</span>
                                     </div>
                                 </div>
                             )
