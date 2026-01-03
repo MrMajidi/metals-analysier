@@ -41,6 +41,23 @@ const DataTable: React.FC<DataTableProps> = ({ data, globalPrices = [], currency
     globalPriceMap.set(gp.localLabel, gp.price);
   });
 
+  // Calculate derived global prices based on billet
+  const billetPrice = globalPriceMap.get('شمش');
+  if (billetPrice) {
+    // تیرآهن = billet + 7%
+    if (!globalPriceMap.has('تیرآهن') || !globalPriceMap.get('تیرآهن')) {
+      globalPriceMap.set('تیرآهن', billetPrice * 1.07);
+    }
+    // نبشی = billet + 7%
+    if (!globalPriceMap.has('نبشی') || !globalPriceMap.get('نبشی')) {
+      globalPriceMap.set('نبشی', billetPrice * 1.07);
+    }
+    // ناودانی = billet + 16%
+    if (!globalPriceMap.has('ناودانی') || !globalPriceMap.get('ناودانی')) {
+      globalPriceMap.set('ناودانی', billetPrice * 1.16);
+    }
+  }
+
   // Calculate dollar price: (average price in Rial) / (global price in USD) * 1000
   // This gives us the implied exchange rate
   const calculateDollarPrice = (averagePrice: number, globalPrice: number | null): number | null => {
