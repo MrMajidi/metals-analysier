@@ -1,8 +1,8 @@
 {
-  "app": "metals",
+  "app": "metali",
+   "platform": "next",
   "port": 3000,
   "build": {
     "location": "iran"
-  },
-  "disks": []
+  }
 }
