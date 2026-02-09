@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { fromDate, toDate } = body;
+    const { fromDate, toDate, subCat = 0 } = body;
 
     if (!fromDate || !toDate) {
       return NextResponse.json(
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       GregorianToDate: toDate,
       MainCat: 1, // Metals and Minerals
       Cat: 1, // Steel
-      SubCat: 0,
+      SubCat: subCat,
       Producer: 0,
     };
 

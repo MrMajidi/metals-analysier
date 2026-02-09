@@ -25,6 +25,9 @@ export default function Home() {
   const [manualFromDate, setManualFromDate] = useState<string>('');
   const [manualToDate, setManualToDate] = useState<string>('');
 
+  // SubCat filter state
+  const [selectedSubCat, setSelectedSubCat] = useState<number>(0);
+
   // Determine effective dates (Manual overrides Week if both are filled)
   const isManualDateSet = manualFromDate.length === 10 && manualToDate.length === 10;
 
@@ -225,7 +228,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ fromDate, toDate }),
+        body: JSON.stringify({ fromDate, toDate, subCat: selectedSubCat }),
       });
 
       if (!response.ok) {
@@ -391,6 +394,65 @@ export default function Home() {
                   >
                     {loading ? 'در حال دریافت...' : 'دریافت داده‌ها'}
                   </button>
+                </div>
+                {/* SubCat Filter */}
+                <div className="md:col-span-2">
+                  <label htmlFor="subCatSelect" className="block mb-2 text-sm font-medium text-slate-400">زیرگروه کالا</label>
+                  <select
+                    id="subCatSelect"
+                    value={selectedSubCat}
+                    onChange={(e) => setSelectedSubCat(Number(e.target.value))}
+                    className="bg-slate-700 border border-slate-600 text-slate-200 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
+                  >
+                    <option value="0">[همه زیرگروهها]</option>
+                    <option value="1">بلوم و بیلت فولادی</option>
+                    <option value="2">تیرآهن متوسط</option>
+                    <option value="3">تیرآهن نیمه سنگین</option>
+                    <option value="4">تیرآهن سنگین</option>
+                    <option value="6">میلگرد متوسط</option>
+                    <option value="7">میلگرد سنگین</option>
+                    <option value="8">سبد مخلوط</option>
+                    <option value="9">ورق گرم</option>
+                    <option value="10">ورق سرد</option>
+                    <option value="17">ورق گالوانیزه</option>
+                    <option value="19">سبد تیرآهن مخلوط</option>
+                    <option value="20">سبد میلگرد و تیرآهن</option>
+                    <option value="21">میلگرد سبک</option>
+                    <option value="22">ورق قلع اندود</option>
+                    <option value="24">قراضه فولادی</option>
+                    <option value="64">میلگرد فوق سنگین (صنعتی)</option>
+                    <option value="77">سبد مخلوط</option>
+                    <option value="78">ناودانی</option>
+                    <option value="99">نبشی</option>
+                    <option value="147">سیم فولادی</option>
+                    <option value="148">سبد ورق گرم</option>
+                    <option value="150">شمش فولادی</option>
+                    <option value="152">تختال</option>
+                    <option value="168">تیرآهن سبک</option>
+                    <option value="410">سبد تیرآهن و ناودانی</option>
+                    <option value="411">سبد نبشی و ناودانی</option>
+                    <option value="419">سبد میلگرد و نبشی</option>
+                    <option value="427">سبد ناودانی</option>
+                    <option value="466">لوله</option>
+                    <option value="467">پروفیل</option>
+                    <option value="478">سبد میلگرد مخلوط</option>
+                    <option value="1495">سبد نبشی</option>
+                    <option value="1499">ریل</option>
+                    <option value="1503">ورق گرم HB</option>
+                    <option value="1504">ورق گرم HC</option>
+                    <option value="2508">سبد ریل آهن مخلوط</option>
+                    <option value="2512">ورق سرد لوازم خانگی</option>
+                    <option value="2513">ورق سرد خودرو</option>
+                    <option value="2517">ورق رنگی</option>
+                    <option value="2520">ورق گرم خودرو</option>
+                    <option value="2521">ورق گالوانیزه خودرو</option>
+                    <option value="2522">ورق گالوانیزه لوازم خانگی</option>
+                    <option value="2546">تیرآهن صنعتی</option>
+                    <option value="2580">ورق گرم نوردکاران</option>
+                    <option value="2659">فرو سیلیس</option>
+                    <option value="2681">بلوم و بیلت آلیاژی</option>
+                    <option value="2682">میلگرد فولاد آلیاژی</option>
+                  </select>
                 </div>
               </div>
             </div>
