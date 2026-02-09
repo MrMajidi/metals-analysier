@@ -59,31 +59,29 @@ export default function Home() {
   }
   const [globalPrices, setGlobalPrices] = useState<GlobalPrice[]>([]);
 
+  const fetchGlobalPrices = async () => {
+    try {
+      const response = await fetch('/api/global-prices');
+      const data = await response.json();
+      if (data.data) {
+        setGlobalPrices(data.data);
+      }
+    } catch (err) {
+      console.error('Error fetching global prices:', err);
+    }
+  };
   // Fetch global prices on mount
   useEffect(() => {
-    const fetchGlobalPrices = async () => {
-      try {
-        const response = await fetch('/api/global-prices');
-        const data = await response.json();
-        if (data.data) {
-          setGlobalPrices(data.data);
-        }
-      } catch (err) {
-        console.error('Error fetching global prices:', err);
-      }
-    };
     fetchGlobalPrices();
   }, []);
 
   // Currency rates state
   interface CurrencyRatesState {
-    talar1: number | null;
-    talar2: number | null;
+    havaleh: number | null;
     azad: number | null;
   }
   const [currencyRates, setCurrencyRates] = useState<CurrencyRatesState>({
-    talar1: null,
-    talar2: null,
+    havaleh: null,
     azad: null,
   });
 
@@ -208,12 +206,14 @@ export default function Home() {
 
 
   const fetchData = async () => {
-    if (!fromDate || !toDate) return;
 
+    if (!fromDate || !toDate) return;
     setLoading(true);
     setError(null);
     setAggregatedData(null);
     setRawData([]);
+
+    await fetchGlobalPrices();
 
     // Reset filters on new fetch? Or keep them? 
     // Usually better to keep them if possible, but options might change.

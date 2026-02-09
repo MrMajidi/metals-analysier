@@ -165,7 +165,7 @@ export default function GlobalPrices() {
                             <th className="text-right py-3 px-2 text-slate-400 font-medium">نام محلی</th>
                             <th className="text-right py-3 px-2 text-slate-400 font-medium">قیمت (USD/mt)</th>
                             <th className="text-right py-3 px-2 text-slate-400 font-medium">آخرین به‌روزرسانی</th>
-                            <th className="text-center py-3 px-2 text-slate-400 font-medium">عملیات</th>
+                            {/* <th className="text-center py-3 px-2 text-slate-400 font-medium">عملیات</th> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -229,7 +229,7 @@ export default function GlobalPrices() {
                                 <td className="py-3 px-2 text-slate-400 text-xs">
                                     {formatRelativeTime(price.lastFetchedAt || price.updatedAt)}
                                 </td>
-                                <td className="py-3 px-2">
+                                {/* <td className="py-3 px-2">
                                     <div className="flex justify-center">
                                         <button
                                             onClick={() => handleRefetch(price.slug)}
@@ -251,7 +251,7 @@ export default function GlobalPrices() {
                                             )}
                                         </button>
                                     </div>
-                                </td>
+                                </td> */}
                             </tr>
                         ))}
                     </tbody>

@@ -12,8 +12,7 @@ interface CurrencyRate {
 
 export default function CurrencyRates() {
     const [rates, setRates] = useState<CurrencyRate[]>([
-        { name: 'نرخ حواله تالار اول', price: 0, source: 'talar1', loading: true, error: null },
-        { name: 'نرخ حواله تالار دوم', price: 0, source: 'talar2', loading: true, error: null },
+        { name: 'نرخ حواله', price: 0, source: 'havaleh', loading: true, error: null },
         { name: 'نرخ دلار بازار آزاد', price: 0, source: 'azad', loading: true, error: null },
     ]);
 
